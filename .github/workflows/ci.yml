@@ -35,13 +35,4 @@ jobs:
           path: incident-hub-${{ github.sha }}.zip
           if-no-files-found: error
 
-  dependency-review:
-    if: github.event_name == 'pull_request'
-    name: Review dependency changes
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
-    steps:
-      - name: Dependency Review
-        uses: actions/dependency-review-action@v5
+

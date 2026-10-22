@@ -1,0 +1,19 @@
+name: Self-hosted runner demo
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  runner-check:
+    name: Verify Windows runner
+    runs-on: [self-hosted, Windows, X64, incident-hub]
+    steps:
+      - name: Report runner environment
+        shell: pwsh
+        run: |
+          "Runner: $env:RUNNER_NAME"
+          python --version
+          git --version

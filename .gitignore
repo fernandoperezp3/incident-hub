@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+*.db
+.venv/
+.env
+.env.*
+!.env.example
+dist/
+build/
+.coverage

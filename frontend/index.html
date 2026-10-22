@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101d2b"><title>Incident Hub | Operaciones TI</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="#"><span class="brand-mark">i</span><span>incident<span class="brand-light">hub</span><small>OPERACIONES TI</small></span></a>
+    <div class="side-label">ESPACIO DE TRABAJO</div>
+    <button class="nav-item active"><span>◈</span> Incidentes <span class="nav-count" id="nav-count">0</span></button>
+    <button class="nav-item" id="nav-dashboard"><span>▦</span> Panel general</button>
+    <div class="side-label side-label-bottom">VISTA</div>
+    <button class="nav-item nav-muted" id="view-open"><span class="dot dot-green"></span> En curso</button>
+    <button class="nav-item nav-muted" id="view-critical"><span class="dot dot-red"></span> Prioridad crítica</button>
+    <div class="sidebar-foot"><div class="avatar">IT</div><div><b>Equipo de soporte</b><small>Centro de operaciones</small></div><span class="online"></span></div>
+  </aside>
+  <main class="main">
+    <header class="topbar"><div class="breadcrumbs">Operaciones <span>/</span> <b>Incidentes</b></div><div class="top-actions"><span class="live"><i></i> Sistema operativo</span><button class="icon-button" aria-label="Notificaciones">♧<em></em></button><div class="avatar avatar-small">MP</div></div></header>
+    <div class="content">
+      <section class="page-heading"><div><div class="eyebrow">CENTRO DE SERVICIO <span>•</span> VISTA GENERAL</div><h1>Incidentes</h1><p class="subtitle">Todo el soporte, en un solo lugar.</p></div><button class="primary-button" id="new-incident"><span>＋</span> Nuevo incidente</button></section>
+      <section class="metrics" id="metrics"></section>
+      <section class="panel dashboard-panel" id="dashboard-panel"><div class="panel-heading"><div><h2>Panorama del servicio</h2><p>Distribución actual de incidentes</p></div><span class="updated">● Datos en vivo</span></div><div class="charts"><div class="chart-block"><h3>Por categoría</h3><div id="category-chart" class="bars"></div></div><div class="chart-block"><h3>Por responsable</h3><div id="technician-chart" class="bars"></div></div></div></section>
+      <section class="panel incidents-panel"><div class="panel-heading list-heading"><div><h2>Todos los incidentes <span class="count-pill" id="list-count">0</span></h2><p>Seguimiento y asignación del equipo</p></div><button class="ghost-button" id="reset-filters">↺ <span>Limpiar filtros</span></button></div>
+        <div class="filters"><label class="search-box"><span>⌕</span><input id="search" type="search" placeholder="Buscar incidente..."></label><select id="filter-status"><option value="">Estado: todos</option><option>NUEVO</option><option>ASIGNADO</option><option>EN_PROCESO</option><option>RESUELTO</option><option>CERRADO</option></select><select id="filter-priority"><option value="">Prioridad: todas</option><option>CRITICA</option><option>ALTA</option><option>MEDIA</option><option>BAJA</option></select><select id="filter-category"><option value="">Categoría: todas</option></select><select id="filter-technician"><option value="">Responsable: todos</option></select></div>
+        <div class="table-wrap"><table><thead><tr><th>INCIDENTE</th><th>CATEGORÍA</th><th>PRIORIDAD</th><th>ESTADO</th><th>RESPONSABLE</th><th>REPORTADO</th><th></th></tr></thead><tbody id="incident-rows"></tbody></table><div id="empty-state" class="empty-state" hidden><span>◈</span><b>No hay incidentes para mostrar</b><p>Ajusta los filtros o registra un incidente nuevo.</p></div></div>
+      </section>
+      <footer>Incident Hub <span>·</span> Proyecto integrador DevOps <span>·</span> v0.1.0</footer>
+    </div>
+  </main>
+  <dialog id="incident-dialog"><form id="incident-form" method="dialog"><div class="dialog-heading"><div><div class="eyebrow">REGISTRO DE SOPORTE</div><h2>Nuevo incidente</h2></div><button class="close-button" type="button" data-close>×</button></div><label>Título<input name="title" required maxlength="120" placeholder="Ej. No puedo acceder al correo"></label><label>Descripción<textarea name="description" required rows="3" placeholder="Describe qué ocurrió y desde cuándo..."></textarea></label><div class="form-row"><label>Categoría<select name="category" required><option value="">Seleccionar</option><option>Acceso</option><option>Aplicaciones</option><option>Hardware</option><option>Red</option><option>Seguridad</option><option>Otro</option></select></label><label>Prioridad<select name="priority" required><option>BAJA</option><option selected>MEDIA</option><option>ALTA</option><option>CRITICA</option></select></label></div><label>Reportado por<input name="reporter" required value="Usuario actual"></label><p class="form-error" id="form-error"></p><div class="dialog-actions"><button type="button" class="ghost-button" data-close>Cancelar</button><button type="submit" class="primary-button">Crear incidente <span>→</span></button></div></form></dialog>
+  <dialog id="detail-dialog"><div id="detail-content"></div></dialog>
+  <div class="toast" id="toast"></div>
+  <script src="/app.js" defer></script>
+</body>
+</html>

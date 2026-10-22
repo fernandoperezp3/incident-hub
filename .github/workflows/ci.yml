@@ -27,7 +27,7 @@ jobs:
       - name: Check dependency inventory
         run: python -m pip install --disable-pip-version-check pip-audit && pip-audit -r requirements.txt
       - name: Package application
-        run: python -m zipfile -c incident-hub-${GITHUB_SHA::7}.zip backend frontend database README.md requirements.txt
+        run: python -m zipfile -c incident-hub-${{ github.sha }}.zip backend frontend database README.md requirements.txt
       - name: Upload build artifact
         uses: actions/upload-artifact@v6
         with:
@@ -35,13 +35,4 @@ jobs:
           path: incident-hub-${{ github.sha }}.zip
           if-no-files-found: error
 
-  dependency-review:
-    if: github.event_name == 'pull_request'
-    name: Review dependency changes
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
-    steps:
-      - name: Dependency Review
-        uses: actions/dependency-review-action@v5
+

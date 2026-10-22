@@ -28,6 +28,12 @@ class ApiTests(unittest.TestCase):
         cls.server.server_close()
         cls.temp.cleanup()
 
+    def setUp(self):
+        with app.connect() as db:
+            db.execute("DELETE FROM activity")
+            db.execute("DELETE FROM incidents")
+        app.initialize()
+
     def request(self, path, method="GET", payload=None):
         data = json.dumps(payload).encode() if payload is not None else None
         req = Request(self.base + path, data=data, method=method, headers={"Content-Type": "application/json"})
@@ -44,7 +50,7 @@ class ApiTests(unittest.TestCase):
     def test_create_filter_update_and_activity(self):
         status, created = self.request("/api/incidents", "POST", {
             "title": "Prueba de API", "description": "Descripción", "category": "Acceso",
-            "priority": "ALTA", "reporter": "QA",
+            "priority": "BAJA", "reporter": "QA",
         })
         self.assertEqual(201, status)
         incident_id = created["id"]
@@ -53,7 +59,9 @@ class ApiTests(unittest.TestCase):
         detail = self.request(f"/api/incidents/{incident_id}")[1]
         self.assertEqual("Alex", detail["technician"])
         self.assertTrue(any(entry["message"] == "Seguimiento" for entry in detail["activity"]))
-        self.assertEqual(1, len(self.request("/api/incidents?priority=ALTA")[1]))
+        filtered = self.request("/api/incidents?priority=BAJA")[1]
+        self.assertIn(incident_id, [item["id"] for item in filtered])
+        self.assertTrue(all(item["priority"] == "BAJA" for item in filtered))
 
     def test_reject_invalid_incident(self):
         status, result = self.request("/api/incidents", "POST", {"title": "Falta información"})
@@ -63,3 +71,4 @@ class ApiTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+

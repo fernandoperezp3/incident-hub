@@ -129,8 +129,20 @@ class Handler(BaseHTTPRequestHandler):
                         clauses.append("technician IS NULL" if key == "technician" and query[key] == "Sin asignar" else f"{key} = ?")
                         if not (key == "technician" and query[key] == "Sin asignar"):
                             values.append(query[key])
-                sql = "SELECT * FROM incidents" + (" WHERE " + " AND ".join(clauses) if clauses else "") + " ORDER BY CASE priority WHEN 'CRITICA' THEN 0 WHEN 'ALTA' THEN 1 WHEN 'MEDIA' THEN 2 ELSE 3 END, id DESC"
-                return self.send_json(200, [incident_dict(row, db) for row in db.execute(sql, values)])
+                try:
+                    limit = int(query.get("limit", "100"))
+                    offset = int(query.get("offset", "0"))
+                except ValueError:
+                    return self.send_json(400, {"error": "Límite y desplazamiento deben ser números enteros."})
+                if limit < 1 or limit > 100 or offset < 0:
+                    return self.send_json(400, {"error": "El límite debe estar entre 1 y 100 y el desplazamiento no puede ser negativo."})
+                where = " WHERE " + " AND ".join(clauses) if clauses else ""
+                order = " ORDER BY CASE priority WHEN 'CRITICA' THEN 0 WHEN 'ALTA' THEN 1 WHEN 'MEDIA' THEN 2 ELSE 3 END, id DESC"
+                total = db.execute("SELECT COUNT(*) FROM incidents" + where, values).fetchone()[0]
+                sql = "SELECT * FROM incidents" + where + order + " LIMIT ? OFFSET ?"
+                items = [incident_dict(row, db) for row in db.execute(sql, values + [limit, offset])]
+                next_offset = offset + len(items) if offset + len(items) < total else None
+                return self.send_json(200, {"items": items, "pagination": {"total": total, "limit": limit, "offset": offset, "next_offset": next_offset}})
             parts = parsed.path.strip("/").split("/")
             if len(parts) == 3 and parts[:2] == ["api", "incidents"] and parts[2].isdigit():
                 row = db.execute("SELECT * FROM incidents WHERE id=?", (int(parts[2]),)).fetchone()

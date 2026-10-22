@@ -45,7 +45,7 @@ class ApiTests(unittest.TestCase):
 
     def test_health_and_demo_incidents(self):
         self.assertEqual(200, self.request("/api/health")[0])
-        self.assertEqual(4, len(self.request("/api/incidents")[1]))
+        self.assertEqual(4, len(self.request("/api/incidents")[1]["items"]))
 
     def test_create_filter_update_and_activity(self):
         status, created = self.request("/api/incidents", "POST", {
@@ -60,8 +60,18 @@ class ApiTests(unittest.TestCase):
         self.assertEqual("Alex", detail["technician"])
         self.assertTrue(any(entry["message"] == "Seguimiento" for entry in detail["activity"]))
         filtered = self.request("/api/incidents?priority=BAJA")[1]
-        self.assertIn(incident_id, [item["id"] for item in filtered])
-        self.assertTrue(all(item["priority"] == "BAJA" for item in filtered))
+        self.assertIn(incident_id, [item["id"] for item in filtered["items"]])
+        self.assertTrue(all(item["priority"] == "BAJA" for item in filtered["items"]))
+
+    def test_incident_list_paginates(self):
+        first = self.request("/api/incidents?limit=2&offset=0")[1]
+        self.assertEqual(2, len(first["items"]))
+        self.assertEqual(4, first["pagination"]["total"])
+        self.assertEqual(2, first["pagination"]["next_offset"])
+        second = self.request("/api/incidents?limit=2&offset=2")[1]
+        self.assertEqual(2, len(second["items"]))
+        self.assertIsNone(second["pagination"]["next_offset"])
+        self.assertEqual(400, self.request("/api/incidents?limit=101")[0])
 
     def test_reject_invalid_incident(self):
         status, result = self.request("/api/incidents", "POST", {"title": "Falta información"})

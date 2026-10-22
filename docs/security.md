@@ -5,7 +5,7 @@
 - Runtime sin paquetes externos; `requirements.txt` registra el inventario intencionalmente vacío.
 - SQL parametrizado para filtros y cambios; restricciones CHECK para estados y prioridades.
 - Datos SQLite y archivos `.env` ignorados por Git.
-- Workflow con permisos mínimos de lectura; dependency review corre en PR.
+- Workflow con permisos mínimos de lectura; `pip-audit` revisa el inventario declarado durante CI.
 - No se solicitan ni almacenan tokens en el código.
 
 ## Riesgos de la demostración
@@ -23,3 +23,4 @@ Este prototipo no autentica usuarios y el servidor no está diseñado para expos
 | TD-05 | No existe despliegue con ambiente de staging/rollback automatizado. | Media | En esta etapa preparar release manual controlado. | Abierto; plan en release.md. |
 
 La consigna solicita identificar cinco deudas y resolver al menos dos mediante trabajo trazable. Estos cinco hallazgos son riesgos iniciales del diseño, no se reportan como deuda resuelta. Al iniciar la fase de hardening, elegir dos mejoras acotadas, crear Issues, completar PRs y reemplazar su estado con enlaces reales. No inventar resultados de análisis de paquetes: el runtime base no declara dependencias externas; guardar el resultado de `pip-audit` de CI.
+

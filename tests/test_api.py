@@ -28,6 +28,12 @@ class ApiTests(unittest.TestCase):
         cls.server.server_close()
         cls.temp.cleanup()
 
+    def setUp(self):
+        with app.connect() as db:
+            db.execute("DELETE FROM activity")
+            db.execute("DELETE FROM incidents")
+        app.initialize()
+
     def request(self, path, method="GET", payload=None):
         data = json.dumps(payload).encode() if payload is not None else None
         req = Request(self.base + path, data=data, method=method, headers={"Content-Type": "application/json"})
@@ -63,3 +69,4 @@ class ApiTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+

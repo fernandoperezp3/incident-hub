@@ -73,6 +73,22 @@ class ApiTests(unittest.TestCase):
         self.assertIsNone(second["pagination"]["next_offset"])
         self.assertEqual(400, self.request("/api/incidents?limit=101")[0])
 
+    def test_reject_non_object_json(self):
+        status, result = self.request("/api/incidents", "POST", [])
+        self.assertEqual(400, status)
+        self.assertIn("objeto", result["error"])
+
+    def test_reject_oversized_body(self):
+        request = Request(
+            self.base + "/api/incidents",
+            data=b"x" * (app.MAX_BODY_BYTES + 1),
+            method="POST",
+            headers={"Content-Type": "application/json"},
+        )
+        with self.assertRaises(HTTPError) as response:
+            urlopen(request)
+        self.assertEqual(413, response.exception.code)
+
     def test_reject_invalid_incident(self):
         status, result = self.request("/api/incidents", "POST", {"title": "Falta información"})
         self.assertEqual(400, status)

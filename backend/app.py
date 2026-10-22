@@ -15,6 +15,11 @@ ROOT = Path(__file__).resolve().parent.parent
 DB_PATH = Path(os.environ.get("INCIDENT_DB", ROOT / "database" / "incidents.db"))
 STATUSES = {"NUEVO", "ASIGNADO", "EN_PROCESO", "RESUELTO", "CERRADO"}
 PRIORITIES = {"BAJA", "MEDIA", "ALTA", "CRITICA"}
+MAX_BODY_BYTES = 1024 * 1024
+
+
+class PayloadTooLarge(Exception):
+    pass
 
 
 def now() -> str:
@@ -90,9 +95,19 @@ class Handler(BaseHTTPRequestHandler):
     def body(self) -> dict:
         try:
             size = int(self.headers.get("Content-Length", "0"))
-            return json.loads(self.rfile.read(size) or b"{}")
-        except (ValueError, json.JSONDecodeError):
+        except ValueError:
+            raise ValueError("Content-Length no es válido.")
+        if size < 0:
+            raise ValueError("Content-Length no es válido.")
+        if size > MAX_BODY_BYTES:
+            raise PayloadTooLarge("El cuerpo supera el límite de 1 MiB.")
+        try:
+            payload = json.loads(self.rfile.read(size) or b"{}")
+        except json.JSONDecodeError:
             raise ValueError("El cuerpo debe ser JSON válido.")
+        if not isinstance(payload, dict):
+            raise ValueError("El cuerpo JSON debe ser un objeto.")
+        return payload
 
     def do_OPTIONS(self) -> None:
         self.send_json(200, {"ok": True})
@@ -174,6 +189,9 @@ class Handler(BaseHTTPRequestHandler):
                     db.execute("INSERT INTO activity(incident_id,author,message,created_at) VALUES(?,?,?,?)", (incident_id, author, message, now()))
                     return self.send_json(201, {"ok": True})
             self.send_json(404, {"error": "Ruta no encontrada."})
+        except PayloadTooLarge as exc:
+            self.close_connection = True
+            self.send_json(413, {"error": str(exc)})
         except ValueError as exc:
             self.send_json(400, {"error": str(exc)})
 
@@ -209,6 +227,9 @@ class Handler(BaseHTTPRequestHandler):
                 db.execute(f"UPDATE incidents SET {assignments}, updated_at=? WHERE id=?", [v for _, v in changes] + [now(), incident_id])
                 db.executemany("INSERT INTO activity(incident_id,author,message,created_at) VALUES(?,?,?,?)", [(incident_id, "Sistema", note, now()) for note in activity])
                 return self.send_json(200, incident_dict(db.execute("SELECT * FROM incidents WHERE id=?", (incident_id,)).fetchone(), db))
+        except PayloadTooLarge as exc:
+            self.close_connection = True
+            self.send_json(413, {"error": str(exc)})
         except ValueError as exc:
             self.send_json(400, {"error": str(exc)})
 

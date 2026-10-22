@@ -63,7 +63,8 @@ def initialize() -> None:
                 ("Sistema de ventas no disponible", "El sistema muestra error 503 para todo el equipo.", "Aplicaciones", "CRITICA", "Diego Morales", "Carlos Méndez", "RESUELTO"),
             ]
             db.executemany("INSERT INTO incidents(title,description,category,priority,reporter,technician,status,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?)", [(*x, stamp, stamp) for x in examples])
-            db.execute("INSERT INTO activity(incident_id,author,message,created_at) VALUES(1,'Carlos Méndez','Se está revisando la configuración de la cuenta.',?)", (stamp,))
+            first_incident_id = db.execute("SELECT id FROM incidents WHERE title=?", (examples[0][0],)).fetchone()[0]
+            db.execute("INSERT INTO activity(incident_id,author,message,created_at) VALUES(?,'Carlos Méndez','Se está revisando la configuración de la cuenta.',?)", (first_incident_id, stamp))
 
 
 def incident_dict(row: sqlite3.Row, db: sqlite3.Connection) -> dict:
@@ -212,3 +213,4 @@ def serve() -> None:
 
 if __name__ == "__main__":
     serve()
+

@@ -22,8 +22,9 @@ La alternativa al agente Azure es un **self-hosted runner de GitHub Actions** en
 2. Seguir solo las instrucciones y comandos temporales que emite GitHub para este repositorio. El token de registro no se comparte ni se guarda en documentación o commits.
 3. Instalarlo en una carpeta dedicada, aceptar únicamente el uso previsto para este repositorio y evitar ejecutar código de repositorios ajenos.
 4. Para uso permanente, instalar el runner como servicio y comprobar que figure como `Idle`.
-5. Añadir una etiqueta propia y usarla en un workflow manual separado con `runs-on: [self-hosted, incident-hub]`. Ejecutarlo con un cambio inocuo y guardar el enlace del run como evidencia.
-6. Deshabilitar o desinstalar el runner después de la demostración si ya no se necesita.
+5. Añadir la etiqueta `incident-hub`. El workflow manual [self-hosted.yml](../.github/workflows/self-hosted.yml) usa las etiquetas `self-hosted`, `Windows`, `X64` e `incident-hub`; solo muestra la versión de Python, Git y el nombre del runner, sin descargar ni ejecutar código del repositorio.
+6. Después de registrar el runner, abrir Actions → Self-hosted runner demo → Run workflow, ejecutar la verificación y guardar el enlace del run como evidencia.
+7. Deshabilitar o desinstalar el runner después de la demostración si ya no se necesita.
 
 La inscripción y la evidencia de una ejecución self-hosted siguen pendientes; se registran en [Issue #33](https://github.com/fernandoperezp3/incident-hub/issues/33). Esta parte requiere que la computadora permanezca disponible para ejecutar el servicio.
 

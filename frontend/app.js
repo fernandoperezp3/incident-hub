@@ -5,6 +5,8 @@ const labelStatus = (value) => ({NUEVO:'Nuevo',ASIGNADO:'Asignado',EN_PROCESO:'E
 const labelPriority = (value) => ({CRITICA:'Crítica',ALTA:'Alta',MEDIA:'Media',BAJA:'Baja'}[value] || value);
 let incidents = [];
 let activeView = '';
+let pageOffset = 0;
+let pageHasMore = false;
 let toastTimer;
 
 async function request(path, options = {}) {
@@ -23,15 +25,20 @@ function dateLabel(value) {
 }
 function avatarName(value) { return value.split(/\s+/).slice(0,2).map((part) => part[0] || '').join('').toUpperCase(); }
 
-async function load() {
+async function load(append = false) {
   const params = new URLSearchParams();
   for (const [key, id] of [['status','filter-status'],['priority','filter-priority'],['category','filter-category'],['technician','filter-technician']]) {
     if ($('#'+id).value) params.set(key, $('#'+id).value);
   }
   if (activeView === 'critical') params.set('priority', 'CRITICA');
-  const [data, metrics, allIncidents] = await Promise.all([request('/incidents?'+params), request('/metrics'), request('/incidents')]);
-  incidents = activeView === 'open' ? data.filter((item) => !['RESUELTO','CERRADO'].includes(item.status)) : data;
-  renderRows(); renderMetrics(metrics); renderCharts(metrics); updateSelects(allIncidents);
+  params.set('limit', '100');
+  params.set('offset', append ? String(pageOffset) : '0');
+  const [data, metrics, allIncidents] = await Promise.all([request('/incidents?'+params), request('/metrics'), request('/incidents?limit=100')]);
+  const page = activeView === 'open' ? data.items.filter((item) => !['RESUELTO','CERRADO'].includes(item.status)) : data.items;
+  incidents = append ? incidents.concat(page) : page;
+  pageOffset = data.pagination.next_offset;
+  pageHasMore = pageOffset !== null;
+  renderRows(); renderMetrics(metrics); renderCharts(metrics); updateSelects(allIncidents.items);
 }
 function renderMetrics(m) {
   $('#nav-count').textContent = m.open;
@@ -58,6 +65,7 @@ function renderRows() {
     <td>${item.technician ? `<span class="person"><i class="person-dot">${escapeHtml(avatarName(item.technician))}</i>${escapeHtml(item.technician)}</span>` : '<span class="person none">Sin asignar</span>'}</td>
     <td><span class="date">${dateLabel(item.created_at)}</span></td><td><button class="row-menu" aria-label="Ver detalle" data-open="${item.id}">···</button></td></tr>`).join('');
   $('#empty-state').hidden = items.length > 0;
+  $('#load-more').hidden = !pageHasMore;
 }
 function updateSelects(allIncidents) {
   const category = $('#filter-category'); const technician = $('#filter-technician');
@@ -96,6 +104,7 @@ $('#incident-form').onsubmit = async (event) => {
 };
 ['filter-status','filter-priority','filter-category','filter-technician'].forEach((id) => $('#'+id).onchange = () => { activeView=''; load().catch((e) => toast(e.message)); });
 $('#search').oninput = renderRows;
+$('#load-more').onclick = () => load(true).catch((e) => toast(e.message));
 $('#reset-filters').onclick = () => { ['filter-status','filter-priority','filter-category','filter-technician'].forEach((id) => $('#'+id).value=''); $('#search').value=''; activeView=''; load().catch((e) => toast(e.message)); };
 $('#view-open').onclick = () => { activeView='open'; $('#filter-status').value=''; load().catch((e) => toast(e.message)); };
 $('#view-critical').onclick = () => { activeView='critical'; $('#filter-priority').value=''; load().catch((e) => toast(e.message)); };

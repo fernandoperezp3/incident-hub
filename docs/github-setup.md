@@ -2,28 +2,31 @@
 
 ## Repositorio único
 
-Crear un repositorio privado llamado `incident-hub` en la cuenta del estudiante. Subir el contenido del workspace y conservar una sola rama principal llamada `main`. No subir la base de datos local, tokens, claves ni archivos `.env`. Después de conectar el repo, añadir su URL a este documento y al README.
+El proyecto está en el repositorio público [fernandoperezp3/incident-hub](https://github.com/fernandoperezp3/incident-hub), con `main` como rama principal. El alcance vigente usa GitHub Issues y GitHub Actions. La instrucción inicial sobre tres repositorios y Azure fue reemplazada por la confirmación del ingeniero: un solo repositorio y sin cuenta Azure.
 
-## Ajustes del repositorio
+No subir la base local, tokens, claves ni archivos `.env`.
 
-1. Activar GitHub Issues y crear los ítems de `docs/backlog.md`; añadirlos a un GitHub Project con los campos sugeridos.
-2. En Settings → Rules/Branches, proteger `main`: exigir Pull Request y que pase `CI / Validate, test and package`. En una cuenta individual, acordar con el instructor cómo evidenciar revisión sin autoaprobar.
-3. Habilitar dependency graph y, si la cuenta lo permite, Dependabot alerts y security updates.
-4. Configurar GitHub Environment `demo` para una publicación futura. Guardar valores sensibles solo como Environment secrets; no crear secrets ficticios si no hay despliegue.
-5. Activar Releases y publicar tags SemVer después del checklist de `docs/release.md`.
+## Ajustes recomendados del repositorio
 
-## Runner autohospedado Windows
+1. Los ítems del backlog se encuentran como Issues enlazados en [docs/backlog.md](backlog.md).
+2. Proteger `main` con Pull Requests y CI verde si las opciones del plan de GitHub lo permiten. Para el proyecto individual, el historial de PRs y la revisión técnica quedan como evidencia.
+3. El workflow ejecuta `pip-audit`; el runtime base no declara dependencias externas. No añadir Dependency Review Action mientras Dependency Graph no esté habilitado.
+4. No configurar un Environment o secretos ficticios mientras no exista un despliegue.
+5. Publicar tags SemVer y Releases después de completar [docs/release.md](release.md).
 
-La consigna solicita un agente autohospedado de Azure. Como no hay cuenta Azure, la adaptación equivalente es un **self-hosted runner de GitHub Actions** en una computadora propia.
+## Runner self-hosted Windows
 
-1. En el repo: Settings → Actions → Runners → New self-hosted runner → Windows x64. Seguir los comandos que GitHub presenta para ese repositorio; el token de registro es temporal y no debe guardarse en documentación ni commits.
-2. Instalar el runner en una carpeta dedicada, aceptar únicamente el uso previsto para este repo y probarlo sin ejecutar código de repositorios ajenos.
-3. Para uso permanente, instalarlo como servicio desde la carpeta del runner y comprobar que aparezca `Idle` en Settings → Actions → Runners.
-4. Añadir una etiqueta propia, por ejemplo `incident-hub`, y crear un workflow manual separado que use `runs-on: [self-hosted, incident-hub]`. Ejecutarlo con un cambio inocuo y guardar URL del workflow y log exitoso como evidencia.
-5. Deshabilitar o desinstalar el runner al terminar la demostración si el equipo no necesita más ejecuciones.
+La alternativa al agente Azure es un **self-hosted runner de GitHub Actions** en una computadora propia.
 
-No se ha conectado ni usado un runner desde este workspace; primero debe existir el repositorio en GitHub y completarse el alta siguiendo los comandos emitidos por la propia cuenta.
+1. En el repositorio, abrir Settings → Actions → Runners → New self-hosted runner → Windows x64.
+2. Seguir solo las instrucciones y comandos temporales que emite GitHub para este repositorio. El token de registro no se comparte ni se guarda en documentación o commits.
+3. Instalarlo en una carpeta dedicada, aceptar únicamente el uso previsto para este repositorio y evitar ejecutar código de repositorios ajenos.
+4. Para uso permanente, instalar el runner como servicio y comprobar que figure como `Idle`.
+5. Añadir una etiqueta propia y usarla en un workflow manual separado con `runs-on: [self-hosted, incident-hub]`. Ejecutarlo con un cambio inocuo y guardar el enlace del run como evidencia.
+6. Deshabilitar o desinstalar el runner después de la demostración si ya no se necesita.
+
+La inscripción y la evidencia de una ejecución self-hosted siguen pendientes; se registran en [Issue #33](https://github.com/fernandoperezp3/incident-hub/issues/33). Esta parte requiere que la computadora permanezca disponible para ejecutar el servicio.
 
 ## Demostración de fallo controlado
 
-En una rama de práctica, introducir un cambio deliberado y reversible que haga fallar una validación, abrir PR, capturar el enlace del run, registrar el diagnóstico en el Issue, corregirlo en otro commit y guardar el run verde. No poner credenciales en el cambio. La falla controlada todavía está pendiente.
+PR #2 conserva evidencia de una validación que falló al inicio por estado compartido de las pruebas y de una ejecución posterior verde tras corregir el aislamiento, las IDs de SQLite y la ruta del artefacto.

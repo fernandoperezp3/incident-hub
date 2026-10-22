@@ -1,16 +1,15 @@
 # IT Incident Hub
 
-Portal web para registrar, asignar y seguir incidentes de soporte de TI. Este proyecto integrador demuestra un flujo DevOps reproducible en **un solo repositorio de GitHub**.
+Portal web para registrar, asignar y dar seguimiento a incidentes de soporte de TI. Proyecto integrador con un repositorio público: [fernandoperezp3/incident-hub](https://github.com/fernandoperezp3/incident-hub).
 
-## Estado del proyecto
+## Alcance
 
-Versión inicial de trabajo: `0.1.0`. El alcance vigente usa GitHub Issues/Projects y GitHub Actions. La mención del documento original a tres repositorios y Azure Boards/Pipelines corresponde a una instrucción anterior; el ingeniero confirmó que se entregará un repositorio y el estudiante no cuenta con Azure.
+El ingeniero confirmó que la entrega se realizará en un solo repositorio GitHub y que no se usará Azure. El plan de trabajo está en [GitHub Issues](https://github.com/fernandoperezp3/incident-hub/issues) y sus relaciones en [docs/backlog.md](docs/backlog.md).
 
 ## Requisitos
 
-- Python 3.10 o posterior (solo biblioteca estándar).
+- Python 3.10 o posterior (biblioteca estándar).
 - Navegador moderno.
-- Git y una cuenta de GitHub para publicar el repositorio.
 
 ## Ejecutar localmente
 
@@ -18,7 +17,7 @@ Versión inicial de trabajo: `0.1.0`. El alcance vigente usa GitHub Issues/Proje
 python backend/app.py
 ```
 
-Abrir <http://localhost:8000>. En el primer inicio se crea `database/incidents.db` con incidentes de demostración. La base local queda excluida de Git. Para cambiar puerto o ubicación de datos, configurar `PORT` o `INCIDENT_DB`.
+Abrir <http://localhost:8000>. En el primer inicio se crea `database/incidents.db` con incidentes de demostración. La base local queda excluida de Git. Para cambiar puerto o ubicación, configurar `PORT` o `INCIDENT_DB`.
 
 ## Funcionalidad
 
@@ -28,14 +27,14 @@ Abrir <http://localhost:8000>. En el primer inicio se crea `database/incidents.d
 - Indicadores de abiertos, cerrados, críticos y distribución.
 - API documentada en [docs/api.md](docs/api.md).
 
-## Comprobaciones locales
+## Comprobaciones
 
 ```powershell
 python -m compileall -q backend tests
 python -m unittest discover -s tests -v
 ```
 
-GitHub Actions ejecuta estas comprobaciones en Pull Requests y en `main`, revisa cambios de dependencias y publica un ZIP como artefacto de CI.
+GitHub Actions ejecuta compilación, pruebas automatizadas, `pip-audit` y empaquetado ZIP en PRs y cambios a `main`. La validación verde y el artefacto de CI están enlazados desde [PR #2](https://github.com/fernandoperezp3/incident-hub/pull/2). El runtime no declara paquetes de terceros.
 
 ## Estructura
 
@@ -43,23 +42,23 @@ GitHub Actions ejecuta estas comprobaciones en Pull Requests y en `main`, revisa
 backend/                 API HTTP y persistencia SQLite
 frontend/                interfaz web
 database/                datos locales (ignorados por Git)
-tests/                   comprobaciones automatizadas de API
+tests/                   pruebas automatizadas de API
 docs/                    arquitectura, backlog y operación
 .github/workflows/       integración continua
 ```
 
-## Flujo GitHub
+## Flujo de trabajo
 
-1. Crear un Issue desde una historia de usuario o reporte de defecto.
-2. Trabajar en una rama `feature/<issue>-resumen`, `fix/<issue>-resumen` o `refactor/<issue>-resumen`.
-3. Vincular commits y PR al Issue con `Closes #N`; dejar `main` estable.
-4. Solicitar revisión, atender observaciones y exigir CI verde antes de integrar.
-5. Crear tags SemVer y Releases de GitHub siguiendo [la guía de release](docs/release.md).
+1. Tomar una tarea desde [Issues](https://github.com/fernandoperezp3/incident-hub/issues).
+2. Crear una rama `feature/<issue>-resumen`, `fix/<issue>-resumen` o `docs/<issue>-resumen`.
+3. Abrir PR hacia `main`, vincular el Issue con `Closes #N` y esperar el CI verde.
+4. Registrar revisión técnica y merge en el historial del PR.
+5. Preparar el tag y Release según [docs/release.md](docs/release.md).
 
-## Limitaciones del prototipo
+## Límites
 
-La aplicación es una demostración académica local. SQLite facilita ejecutar el proyecto sin servicios externos; no incluye autenticación ni debe exponerse a Internet con datos reales. Decisiones y trabajos pendientes están en `docs/`.
+Es una demostración académica local: no incluye autenticación y no debe exponerse a Internet ni usarse con datos reales. Deuda técnica y riesgos están descritos en [docs/security.md](docs/security.md). El alta y la ejecución del runner self-hosted quedan como pendiente porque requiere que una computadora del estudiante ejecute el servicio de GitHub Actions; ver [Issue #33](https://github.com/fernandoperezp3/incident-hub/issues/33).
 
-## Responsables
+## Responsable
 
-Proyecto individual: Mario Pérez. Toda contribución verificable se hará con su cuenta GitHub; no se crearán usuarios adicionales.
+Proyecto individual: Mario Pérez (@fernandoperezp3).

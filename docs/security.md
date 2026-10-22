@@ -3,24 +3,23 @@
 ## Controles incluidos
 
 - Runtime sin paquetes externos; `requirements.txt` registra el inventario intencionalmente vacío.
-- SQL parametrizado para filtros y cambios; restricciones CHECK para estados y prioridades.
-- Datos SQLite y archivos `.env` ignorados por Git.
-- Workflow con permisos mínimos de lectura; `pip-audit` revisa el inventario declarado durante CI.
+- Consultas SQL parametrizadas y restricciones CHECK para estados y prioridades.
+- Datos SQLite y archivos `.env` excluidos por Git.
+- GitHub Actions usa permisos mínimos de lectura y ejecuta `pip-audit` contra el inventario declarado.
 - No se solicitan ni almacenan tokens en el código.
 
 ## Riesgos de la demostración
 
-Este prototipo no autentica usuarios y el servidor no está diseñado para exposición pública. Solo usar datos ficticios. Antes de desplegar fuera de localhost: añadir autenticación y autorización por rol, límites de solicitudes/tamaño, política de retención, logging y CORS estricto; usar una base de datos administrada y respaldos; guardar secretos en GitHub Environments; revisar la configuración del host.
+El prototipo no autentica usuarios y no está diseñado para exposición pública. Usar solo datos ficticios. Antes de desplegar fuera de localhost: añadir autenticación y autorización por rol, límites de solicitudes y tamaño, política de retención, logging y CORS estricto; usar base de datos administrada y respaldos; guardar secretos en GitHub Environments; revisar la configuración del host.
 
 ## Registro de deuda técnica
 
 | ID | Hallazgo / riesgo | Severidad | Decisión | Estado / evidencia |
 |---|---|---|---|---|
-| TD-01 | No hay autenticación/autorización. | Alta | Aceptado solo para demo local; crear Issue si se planea despliegue. | Abierto; no usar datos reales. |
-| TD-02 | SQLite no está preparado para concurrencia/escala de producción. | Media | Mantener para demo; evaluar PostgreSQL para despliegue. | Abierto; decisión en architecture.md. |
-| TD-03 | No hay paginación para listas ni bitácora. | Media | Implementar si el volumen de datos crece. | Abierto; verificar límite razonable durante estabilización. |
-| TD-04 | No hay registro central de auditoría ni retención definida. | Media | Evaluar antes de operar con datos reales. | Abierto. |
-| TD-05 | No existe despliegue con ambiente de staging/rollback automatizado. | Media | En esta etapa preparar release manual controlado. | Abierto; plan en release.md. |
+| TD-01 | No hay autenticación ni autorización. | Alta | Aceptado solo para demo local; no usar datos reales. | Abierto. |
+| TD-02 | SQLite no está preparado para concurrencia y escala de producción. | Media | Mantener para demo; evaluar PostgreSQL antes de un despliegue. | Abierto; decisión en [architecture.md](architecture.md). |
+| TD-03 | Las pruebas compartían estado de base temporal y dependían de IDs sembrados. | Media | Aislar datos por prueba y obtener IDs generados. | Resuelto en [PR #2](https://github.com/fernandoperezp3/incident-hub/pull/2); CI verde enlazado allí. |
+| TD-04 | Nombre del archivo ZIP del pipeline no coincidía con la ruta de carga. | Media | Usar SHA completo en nombre y ruta del artefacto. | Resuelto en [PR #2](https://github.com/fernandoperezp3/incident-hub/pull/2); upload artifact verde. |
+| TD-05 | No existe runner self-hosted registrado ni ejecución de evidencia. | Media | Registrar runner de GitHub en la computadora propia; no usar Azure. | Pendiente; seguimiento en [Issue #33](https://github.com/fernandoperezp3/incident-hub/issues/33). |
 
-La consigna solicita identificar cinco deudas y resolver al menos dos mediante trabajo trazable. Estos cinco hallazgos son riesgos iniciales del diseño, no se reportan como deuda resuelta. Al iniciar la fase de hardening, elegir dos mejoras acotadas, crear Issues, completar PRs y reemplazar su estado con enlaces reales. No inventar resultados de análisis de paquetes: el runtime base no declara dependencias externas; guardar el resultado de `pip-audit` de CI.
-
+El pipeline ejecuta `pip-audit` en cada PR. El inventario base no declara dependencias externas; el resultado real se encuentra en el run de CI enlazado por PR #2.

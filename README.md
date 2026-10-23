@@ -34,7 +34,7 @@ python -m compileall -q backend tests
 python -m unittest discover -s tests -v
 ```
 
-GitHub Actions ejecuta compilación, pruebas automatizadas, `pip-audit` y empaquetado ZIP en PRs y cambios a `main`. La validación verde y el artefacto de CI están enlazados desde [PR #2](https://github.com/fernandoperezp3/incident-hub/pull/2). El runtime no declara paquetes de terceros.
+GitHub Actions ejecuta compilación, pruebas automatizadas, `pip-audit` y empaquetado ZIP en PRs y cambios a `main`. El runtime no declara paquetes de terceros. La release [v1.0.0](https://github.com/fernandoperezp3/incident-hub/releases/tag/v1.0.0) incluye el paquete validado por CI.
 
 ## Estructura
 
@@ -57,7 +57,7 @@ docs/                    arquitectura, backlog y operación
 
 ## Límites
 
-Es una demostración académica local: no incluye autenticación y no debe exponerse a Internet ni usarse con datos reales. Deuda técnica y riesgos están descritos en [docs/security.md](docs/security.md). El alta y la ejecución del runner self-hosted quedan como pendiente porque requiere que una computadora del estudiante ejecute el servicio de GitHub Actions; ver [Issue #33](https://github.com/fernandoperezp3/incident-hub/issues/33).
+Es una demostración académica local: no incluye autenticación y no debe exponerse a Internet ni usarse con datos reales. Deuda técnica y riesgos están descritos en [docs/security.md](docs/security.md). El runner self-hosted de Windows se registró con la etiqueta `incident-hub` y ejecutó correctamente el workflow de demostración: [run exitoso](https://github.com/fernandoperezp3/incident-hub/actions/runs/39878187941). Para futuras ejecuciones, la computadora del estudiante debe estar encendida y el servicio del runner activo.
 
 ## Responsable
 

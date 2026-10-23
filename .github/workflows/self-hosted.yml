@@ -1,6 +1,9 @@
 name: Self-hosted runner demo
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -12,7 +15,7 @@ jobs:
     runs-on: [self-hosted, Windows, X64, incident-hub]
     steps:
       - name: Report runner environment
-        shell: pwsh
+        shell: powershell
         run: |
           "Runner: $env:RUNNER_NAME"
           python --version

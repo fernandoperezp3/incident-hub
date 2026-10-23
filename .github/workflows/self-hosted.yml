@@ -1,6 +1,9 @@
 name: Self-hosted runner demo
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:

@@ -1,6 +1,7 @@
 """End-to-end API checks using only Python's standard library."""
 
 import json
+from http.client import HTTPConnection
 import tempfile
 import threading
 import unittest
@@ -79,15 +80,17 @@ class ApiTests(unittest.TestCase):
         self.assertIn("objeto", result["error"])
 
     def test_reject_oversized_body(self):
-        request = Request(
-            self.base + "/api/incidents",
-            data=b"x" * (app.MAX_BODY_BYTES + 1),
-            method="POST",
-            headers={"Content-Type": "application/json"},
-        )
-        with self.assertRaises(HTTPError) as response:
-            urlopen(request)
-        self.assertEqual(413, response.exception.code)
+        connection = HTTPConnection("127.0.0.1", self.server.server_port)
+        try:
+            connection.putrequest("POST", "/api/incidents")
+            connection.putheader("Content-Type", "application/json")
+            connection.putheader("Content-Length", str(app.MAX_BODY_BYTES + 1))
+            connection.endheaders()
+            response = connection.getresponse()
+            self.assertEqual(413, response.status)
+            self.assertIn("límite", response.read().decode("utf-8"))
+        finally:
+            connection.close()
 
     def test_reject_invalid_incident(self):
         status, result = self.request("/api/incidents", "POST", {"title": "Falta información"})

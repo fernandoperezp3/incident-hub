@@ -19,6 +19,17 @@ python backend/app.py
 
 Abrir <http://localhost:8000>. En el primer inicio se crea `database/incidents.db` con incidentes de demostración. La base local queda excluida de Git. Para cambiar puerto o ubicación, configurar `PORT` o `INCIDENT_DB`.
 
+## Ejecutar con Docker
+
+Con Docker Desktop activo, ejecutar desde la raíz:
+
+```powershell
+docker compose up --build -d
+docker compose ps
+```
+
+Abrir <http://localhost:8000>. Para correr las pruebas en contenedor, ejecutar `docker compose --profile test run --rm tests`. La guía completa está en [docs/docker.md](docs/docker.md).
+
 ## Funcionalidad
 
 - Alta y consulta de incidentes, prioridad y categorías.

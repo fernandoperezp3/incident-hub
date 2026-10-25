@@ -52,7 +52,7 @@ Repositorio público único: [fernandoperezp3/incident-hub](https://github.com/f
 
 E1 contiene F1 y F2; E2 contiene F3 y F4. US1–US2 pertenecen a F1, US3–US5 a F2, US6–US7 a F3 y US8 a F4. Las tareas se relacionan con la historia indicada en su fila.
 
-El Issue [#1](https://github.com/fernandoperezp3/incident-hub/issues/1) registra el fallo inicial de aislamiento de datos en las pruebas. Su corrección se integró mediante [PR #2](https://github.com/fernandoperezp3/incident-hub/pull/2); el primer run rojo y el run verde de Actions están enlazados en ese PR. T17 queda abierto hasta que se registre el runner en la computadora y exista evidencia de una ejecución self-hosted.
+El Issue [#1](https://github.com/fernandoperezp3/incident-hub/issues/1) registra el fallo inicial de aislamiento de datos en las pruebas. Su corrección se integró mediante [PR #2](https://github.com/fernandoperezp3/incident-hub/pull/2); el primer run rojo y el run verde de Actions están enlazados en ese PR. T17 quedó completado: el Issue [#33](https://github.com/fernandoperezp3/incident-hub/issues/33) está cerrado y el runner Windows ejecutó correctamente el workflow en [run 39878187941](https://github.com/fernandoperezp3/incident-hub/actions/runs/39878187941).
 
 
 ## Hardening posterior del prototipo
@@ -61,4 +61,4 @@ El Issue [#1](https://github.com/fernandoperezp3/incident-hub/issues/1) registra
 |---|---|---:|---|
 | TD-03 | Paginar la lista de incidentes. | [#35](https://github.com/fernandoperezp3/incident-hub/issues/35) | Integrado en [PR #37](https://github.com/fernandoperezp3/incident-hub/pull/37). |
 | TD-04 | Limitar y validar los cuerpos JSON. | [#36](https://github.com/fernandoperezp3/incident-hub/issues/36) | Integrado en [PR #38](https://github.com/fernandoperezp3/incident-hub/pull/38). |
-| — | Alinear el registro de deuda y la guía de release. | [#40](https://github.com/fernandoperezp3/incident-hub/issues/40) | En curso en PR #41. |
+| — | Alinear el registro de deuda y la guía de release. | [#40](https://github.com/fernandoperezp3/incident-hub/issues/40) | Integrado en [PR #41](https://github.com/fernandoperezp3/incident-hub/pull/41). |

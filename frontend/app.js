@@ -98,8 +98,8 @@ async function openDetail(id) {
 $('#new-incident').onclick = () => $('#incident-dialog').showModal();
 document.querySelectorAll('[data-close]').forEach((button) => button.onclick = () => $('#incident-dialog').close());
 $('#incident-form').onsubmit = async (event) => {
-  event.preventDefault(); const payload = Object.fromEntries(new FormData(event.currentTarget));
-  try { await request('/incidents',{method:'POST',body:JSON.stringify(payload)}); event.currentTarget.reset(); $('#incident-dialog').close(); $('#form-error').textContent=''; activeView=''; await load(); toast('Incidente creado correctamente'); }
+  event.preventDefault(); const form = event.currentTarget; const payload = Object.fromEntries(new FormData(form));
+  try { await request('/incidents',{method:'POST',body:JSON.stringify(payload)}); form.reset(); $('#incident-dialog').close(); $('#form-error').textContent=''; activeView=''; await load(); toast('Incidente creado correctamente'); }
   catch (error) { $('#form-error').textContent=error.message; }
 };
 ['filter-status','filter-priority','filter-category','filter-technician'].forEach((id) => $('#'+id).onchange = () => { activeView=''; load().catch((e) => toast(e.message)); });

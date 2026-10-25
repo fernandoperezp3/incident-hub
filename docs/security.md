@@ -22,7 +22,7 @@ El prototipo no autentica usuarios y no está diseñado para exposición públic
 | TD-02 | SQLite no está preparado para concurrencia y escala de producción. | Media | Mantener para demo; evaluar PostgreSQL antes de un despliegue. | Abierto; decisión en [architecture.md](architecture.md). |
 | TD-03 | La lista de incidentes no tenía paginación. | Media | Limitar resultados y entregar metadatos de siguiente página. | Resuelto en [PR #37](https://github.com/fernandoperezp3/incident-hub/pull/37); CI verde en [run 39819695858](https://github.com/fernandoperezp3/incident-hub/actions/runs/39819695858). |
 | TD-04 | La API no limitaba el tamaño del cuerpo ni validaba el tipo JSON raíz. | Media | Limitar a 1 MiB y requerir un objeto JSON. | Resuelto en [PR #38](https://github.com/fernandoperezp3/incident-hub/pull/38); CI verde en [run 39819966156](https://github.com/fernandoperezp3/incident-hub/actions/runs/39819966156). |
-| TD-05 | No hay runner self-hosted registrado ni ejecución de evidencia. | Media | Registrar un runner de GitHub en una computadora propia; no usar Azure. | Pendiente; seguimiento en [Issue #33](https://github.com/fernandoperezp3/incident-hub/issues/33). El workflow manual ya está en [PR #39](https://github.com/fernandoperezp3/incident-hub/pull/39). |
+| TD-05 | Mantener disponible el runner self-hosted de Windows para la demostración. | Media | Runner propio de GitHub Actions; no se usa Azure. | Configurado y ejecutado correctamente; [Issue #33](https://github.com/fernandoperezp3/incident-hub/issues/33) cerrado y [run 39878187941](https://github.com/fernandoperezp3/incident-hub/actions/runs/39878187941) exitoso. |
 
 ## Correcciones surgidas en la primera ejecución de CI
 

@@ -28,7 +28,7 @@ Usar `MAJOR.MINOR.PATCH`: cambio incompatible → MAJOR; funcionalidad compatibl
 - [x] CI verde en el commit de `main` publicado.
 - [x] Ejecutar el workflow self-hosted y conservar la URL del run.
 - [x] Documentar el inventario de dependencias y la deuda técnica.
-- [ ] Iniciar la aplicación local con datos ficticios y revisar el flujo principal durante la demostración final.
+- [x] Iniciar la aplicación local con datos ficticios y revisar el flujo principal durante la demostración final; la verificación y sus capturas están en el informe PDF de `docs/entrega/`.
 - [x] Crear tag `v1.0.0`, publicar Release notes y adjuntar el ZIP del commit etiquetado.
 - [x] Registrar la URL del Release y la evidencia de validación.
 

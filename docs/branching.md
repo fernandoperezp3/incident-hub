@@ -7,8 +7,10 @@
 - Activar en GitHub la protección de `main`: PR requerido, al menos una aprobación si la configuración individual lo permite y estado de CI obligatorio. No autoaprobar los propios cambios; solicitar la revisión disponible según las reglas de la clase.
 - Integrar mediante squash o merge commit después de aprobar; borrar ramas ya integradas.
 
-## Evidencia que aún debe producirse en GitHub
+## Flujo de integración y evidencia en GitHub
 
-El código local no constituye evidencia de PR revisadas ni de runs reales. Planificar al menos seis PR pequeñas y reales durante el trabajo, y conservar sus URLs, revisiones y runs: 1) esqueleto/API, 2) alta/listado, 3) asignación/bitácora, 4) métricas, 5) hardening y pruebas, 6) release. No crear PR ficticias ni afirmar aprobación sin que ocurra.
+El repositorio tiene cambios reales integrados mediante pull requests: [#2](https://github.com/fernandoperezp3/incident-hub/pull/2), [#34](https://github.com/fernandoperezp3/incident-hub/pull/34), [#37](https://github.com/fernandoperezp3/incident-hub/pull/37), [#38](https://github.com/fernandoperezp3/incident-hub/pull/38), [#39](https://github.com/fernandoperezp3/incident-hub/pull/39) y [#41–#48](https://github.com/fernandoperezp3/incident-hub/pulls?q=is%3Apr+is%3Amerged).
 
-El workflow en `.github/workflows/ci.yml` hace validación, pruebas, auditoría y artefacto. Para evidenciar un fallo controlado, introducir de manera deliberada un fallo en una rama descartable o PR de práctica, guardar el run y corregirlo en el flujo normal; documentar diagnóstico y run exitoso. Nunca publicar secretos para provocar fallos.
+El workflow `.github/workflows/ci.yml` ejecuta validaciones, pruebas, auditoría de dependencias y empaquetado. El [PR #2](https://github.com/fernandoperezp3/incident-hub/pull/2) conserva la corrección del fallo inicial de pruebas y sus ejecuciones de CI. El [PR #47](https://github.com/fernandoperezp3/incident-hub/pull/47) corrigió el formulario de incidentes y fue aprobado antes de fusionarse. El runner Windows se verificó en [esta ejecución](https://github.com/fernandoperezp3/incident-hub/actions/runs/39878187941).
+
+El [PR #48](https://github.com/fernandoperezp3/incident-hub/pull/48) añadió el informe final de pruebas al repositorio; su validación de CI terminó correctamente en [run 40236405780](https://github.com/fernandoperezp3/incident-hub/actions/runs/40236405780).
